@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/output.css">
+    <link rel="stylesheet" href="css/fontello.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="min-h-screen bg-cover bg-center relative" id="main">
+
+        <div
+            class="text-center bg-black/60 p-4 md:p-0 md:top-[15%] top-[10%] left-[10%] md:left-[25%] absolute inset-0 z-50 flex-col items-center w-[80%] md:w-[50%] h-[60%]  py-10">
+
+            <div class="flex gap-3 items-center justify-center text-center">
+                <input type="text" id="city" placeholder="Enter city"
+                    class="border-b-2 focus:outline-none text-white px-4 py-2">
+                <button class="text-white px-4 py-2 border-b-2 hover:bg-gray-200 hover:text-black"
+                    id="btn">Search</button>
+            </div>
+
+
+
+            <div class="w-full my-4 text-white text-4xl font-bold" id="name">
+
+            </div>
+
+
+
+            <div class=" flex flex-col mb-5  text-white">
+                <h4 id="temper" class="font-bold md:text-7xl text-4xl mb-10"></h4>
+                <p id="maxTemp" class="md:text-lg"></p>
+                <p id="minTemp" class="md:text-lg"></p>
+            </div>
+
+            <div class="flex flex-wrap lg:w-[100%] px-3 gap-4 text-white text-center mb-5 justify-around">
+                <p id="feels" class="md:text-lg"></p>
+                <p id="humid" class="md:text-lg"></p>
+                <p id="pressure" class="md:text-lg"></p>
+            </div>
+
+
+            <div class=" flex flex-col items-center  text-white ">
+                <p id="datetime" class="md:text-xl mb-2"></p>
+                <div class="flex items-center gap-2 text-2xl">
+                    <p id="status" class="text-white text-xl"></p>
+                    <i id="icon" class="text-white text-xl"></i>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <figure class="myfoot ">
+            <img src="img/ghazall.jfif" alt="">
+            <a href="https://www.linkedin.com/in/ghazaleh-nezamghadiri-06b626302/" target="_blank"><i
+                    class=" icon-linkedin"></i></a>
+            <a href="https://github.com/GhazalehNezamghadiri" target="_blank"><i class=" icon-icons8-github"></i></a>
+            <a href="https://www.instagram.com/ghazale.ghadiri/?hl=en" target="_blank"><i
+                    class=" icon-icons8-instagram"></i></a>
+            <a href="mailto:ghazalehghadiri2@gmail.com"><i class=" icon-mail"></i></a>
+            <figcaption>ghazaleh ghadiri</figcaption>
+        </figure>
+
+    </div>
+</body>
+
+<script>
+
+    const btn = document.getElementById('btn')
+    const city = document.getElementById('city')
+    const name = document.getElementById('name')
+    const temperature = document.getElementById('temper')
+    const status = document.getElementById('status')
+    const body = document.getElementById('main')
+    const feelsLike = document.getElementById('feels')
+    const humid = document.getElementById('humid')
+    const pressure = document.getElementById('pressure')
+    const icon = document.getElementById('icon')
+
+
+
+    function defaultWeather(cityName) {
+        let temp = cityName || 'tehran'
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${temp}&appid=2d95ea563d4a69500e7e83f6de375b50&units=metric`)
+            .then(res => {
+                if (res.ok) return res.json()
+                throw new Error('errr')
+
+            })
+
+            .then(data => {
+
+                console.log(data)
+
+                const weather = data.weather[0].main.toLowerCase()
+                const localTime = new Date((data.dt + data.timezone) * 1000);
+                const datetime = localTime.toUTCString();
+                const minTemp = document.getElementById('minTemp')
+                const maxTemp = document.getElementById('maxTemp')
+
+
+
+                name.innerText = `${data.name}, ${data.sys.country} `
+                temperature.innerText = `${data.main.temp}°C`
+                feelsLike.innerText = `Feels like : ${data.main.feels_like}°C`
+                humid.innerText = `Humidity : ${data.main.humidity}%`
+                pressure.innerText = `Pressure : ${data.main.pressure}HPa `
+                minTemp.innerText = `Min Temp : ${data.main.temp_min}°C`
+                maxTemp.innerText = `Max Temp : ${data.main.temp_max}°C`
+
+                document.getElementById('datetime').innerText = datetime
+                status.innerText = data.weather[0].main.toLowerCase()
+
+
+                icon.className = 'text-white text-2xl'
+
+                if (weather == 'clear') {
+                    body.style.backgroundImage = "url('img/sunny.jpg')"
+                    icon.classList.add('icon-sun')
+
+                } else if (weather == 'clouds') {
+                    body.style.backgroundImage = "url('img/cloudy.jpg')"
+                    icon.classList.add('icon-mixcloud')
+
+                } else if (weather === 'rain' || (weather === 'drizzle')) {
+                    body.style.backgroundImage = "url('img/rainy.jpg')"
+                    icon.classList.add('icon-rain-1')
+
+                } else if (weather === "snow") {
+                    body.style.backgroundImage = "url('img/snowy.jpg')"
+                    icon.classList.add('icon-snow-heavy')
+                }
+                else {
+                    body.style.backgroundImage = "url('img/partly cloudy.jpg')"
+                    icon.classList.add('icon-cloud-sun')
+                }
+
+
+
+            })
+            .catch((err) => console.log("Error:", err))
+    }
+
+
+
+    btn.addEventListener('click', () => {
+        defaultWeather(city.value)
+
+    })
+
+    window.addEventListener('load', () => {
+        defaultWeather('tehran')
+    })
+
+
+</script>
+
+</html>

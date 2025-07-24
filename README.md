@@ -1,5 +1,8 @@
 # WeatherApp-API
 
+![Image](https://github.com/user-attachments/assets/f0f84825-fb6d-4057-946d-3e57f641b6a8)
+![Image](https://github.com/user-attachments/assets/cd14fbad-aa1c-45fb-a2ce-89059dc1d4ac)
+![Image](https://github.com/user-attachments/assets/318aac1d-4f97-4fbb-95e4-7197418f1a70)
 
 -[Demo Project](https://ghazalehnezamghadiri.github.io/WeatherApp-API/) 
 
